@@ -1,0 +1,75 @@
+main {
+  max-width: 90%;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+.peopleList {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  /* aspect-ratio: 1/1; */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 300px);
+  gap: 16px;
+  justify-content: center;
+}
+
+.personCard {
+  border: 3px solid #0e0b0b;
+  border-radius: 5% 5%;
+  margin: 10px 10px 10px;
+  padding: 14px 14px;
+  aspect-ratio: 1/1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background: #fff;
+}
+
+.personMain {
+  display: grid;
+  gap: 4px;
+}
+
+.personName {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.personMemo {
+  font-size: 13px;
+  color: #666;
+}
+
+.personActions {
+  display: flex;
+  gap: 8px;
+}
+
+h1 {
+  padding: 8px 10px;
+  font-size: 20px;
+  color: darkblue;
+}
+
+.btn {
+  padding: 8px 10px;
+  border: 3px solid #1a1818;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #f6f6f6;
+}
+
+.btn.danger {
+  border-color: #950909;
+}
+
+.btn.danger:hover {
+  background: #fff0f0;
+}
