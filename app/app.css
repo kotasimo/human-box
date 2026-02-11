@@ -10,7 +10,7 @@ main {
   margin: 10px 0 0;
   /* aspect-ratio: 1/1; */
   display: grid;
-  grid-template-columns: repeat(auto-fill, 300px);
+  grid-template-columns: repeat(auto-fill, 170px);
   gap: 16px;
   justify-content: center;
 }
@@ -34,11 +34,16 @@ main {
 }
 
 .personName {
+  overflow: hidden;
   font-size: 18px;
   font-weight: 700;
 }
 
 .personMemo {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   font-size: 13px;
   color: #666;
 }
@@ -73,3 +78,26 @@ h1 {
 .btn.danger:hover {
   background: #fff0f0;
 }
+
+/* .personCard.active {
+  transform: scale(2);
+  z-index: 10;
+} */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modalCard {
+  background: white;
+  padding: 24px;
+  width: 300px;
+  border-radius: 12px;
+}
+

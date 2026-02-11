@@ -10,7 +10,9 @@ type Person = {
 
 const Home = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [draftMemo, setDraftMemo] = useState("");it
+  const [draftName, setDraftName] = useState("");
+  const [draftMemo, setDraftMemo] = useState("");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [people, setPeople] = useState<Person[]>([
     { id: "1", name: "山田", memo: "陸上部" },
     { id: "2", name: "佐藤" },
@@ -32,6 +34,7 @@ const Home = () => {
 
   const startEdit = (person: Person) => {
     setEditingId(person.id);
+    setDraftName(person.name);
     setDraftMemo(person.memo ?? "");
   };
 
@@ -39,10 +42,13 @@ const Home = () => {
     if (editingId === null) return;
 
     setPeople((prev) =>
-      prev.map((p) => (p.id === editingId ? { ...p, memo: draftMemo } : p)),
+      prev.map((p) =>
+        p.id === editingId ? { ...p, name: draftName, memo: draftMemo } : p,
+      ),
     );
 
     setEditingId(null);
+    setDraftName("");
     setDraftMemo("");
   };
 
@@ -61,23 +67,36 @@ const Home = () => {
 
       <ul className="peopleList">
         {people.map((person) => (
-          <li key={person.id} className="personCard">
+          <li
+            key={person.id}
+            className={`personCard ${selectedId === person.id ? "active" : ""}`}
+            onClick={() =>
+              setSelectedId((prev) => (prev === person.id ? null : person.id))
+            }
+          >
             <div className="personMain">
-              <div className="personName">{person.name}</div>
-              {/* {person.memo && <span>({person.memo})</span>} */}
               {editingId === person.id ? (
-                <textarea
-                  className="memoInput"
-                  value={draftMemo}
-                  onChange={(e) => setDraftMemo(e.target.value)}
-                  autoFocus
-                  rows={3}
-                />
+                <>
+                  <input
+                    className="nameInput"
+                    value={draftName}
+                    onChange={(e) => setDraftName(e.target.value)}
+                  />
+                  <textarea
+                    className="memoInput"
+                    value={draftMemo}
+                    onChange={(e) => setDraftMemo(e.target.value)}
+                    autoFocus
+                    rows={3}
+                  />
+                </>
               ) : (
-                <div className="personMemo">
-                  {person.memo ?? " クリックしてメモを書く "}
-                </div>
-
+                <>
+                  <div className="personName">{person.name}</div>
+                  <div className="personMemo">
+                    {person.memo ?? " クリックしてメモを書く "}
+                  </div>
+                </>
               )}
             </div>
 
@@ -108,6 +127,21 @@ const Home = () => {
             </div>
           </li>
         ))}
+
+        {selectedId && (
+          <div className="overlay" onClick={() => setSelectedId(null)}>
+            <div className="modalCard" onClick={(e) => e.stopPropagation()}>
+              {people
+                .filter((p) => p.id === selectedId)
+                .map((p) => (
+                  <div key={p.id}>
+                    <h2>{p.name}</h2>
+                    <p>{p.memo}</p>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
       </ul>
     </main>
   );
