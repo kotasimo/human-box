@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./app.css";
 
 type Person = {
@@ -10,42 +10,44 @@ type Person = {
 
 const STORAGE_KEY = "humanbox-people-v1";
 
+const DEFAULT_PEOPLE: Person[] = [
+  { id: "1", name: "山田", memo: "陸上部" },
+  { id: "2", name: "佐藤" },
+  { id: "3", name: "鈴木", memo: "研究室" },
+];
+
 const Home = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draftName, setDraftName] = useState("");
   const [draftMemo, setDraftMemo] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [people, setPeople] = useState<Person[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) {
-      return [
-    { id: "1", name: "山田", memo: "陸上部" },
-    { id: "2", name: "佐藤" },
-    { id: "3", name: "鈴木", memo: "研究室" },
-  ];
-}
-try {
-  return JSON.parse(saved)
-} catch {
-  return []
-}
-    });
-  // [
-  //   { id: "1", name: "山田", memo: "陸上部" },
-  //   { id: "2", name: "佐藤" },
-  //   { id: "3", name: "鈴木", memo: "研究室" },
-  // ]);
+  const [people, setPeople] = useState<Person[] | null>(null);
 
-  // useEffect(() => {
-  //   const saved = localStorage.getItem(STORAGE_KEY);
-  //   if (!saved) return;
-
-  //   setPeople(JSON.parse(saved));
-  // }, []);
+  const hasLoadedRef = useRef(false);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(people));
+    try {
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        setPeople(JSON.parse(saved));
+      } else {
+        setPeople(DEFAULT_PEOPLE);
+      }
+    } catch {
+      setPeople(DEFAULT_PEOPLE);
+    } finally {
+      hasLoadedRef.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hasLoadedRef.current) return;
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(people));
   }, [people]);
+
+  if (people === null) {
+    return <div>Loading....</div>;
+  }
 
   const addPerson = () => {
     const newPerson: Person = {
