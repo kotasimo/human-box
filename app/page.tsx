@@ -16,29 +16,21 @@ const Home = () => {
   const [draftMemo, setDraftMemo] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [people, setPeople] = useState<Person[]>(() => {
-    if (typeof window === "undefined") {
-      return [
-        { id: "1", name: "山田", memo: "陸上部" },
-        { id: "2", name: "佐藤" },
-        { id: "3", name: "鈴木", memo: "研究室" },
-      ];
-    }
-
     const saved = localStorage.getItem(STORAGE_KEY);
     if (!saved) {
       return [
-        { id: "1", name: "山田", memo: "陸上部" },
-        { id: "2", name: "佐藤" },
-        { id: "3", name: "鈴木", memo: "研究室" },
-      ];
-    }
-    try {
-      return JSON.parse(saved);
-    } catch {
-      return [];
-    }
-  });
-
+    { id: "1", name: "山田", memo: "陸上部" },
+    { id: "2", name: "佐藤" },
+    { id: "3", name: "鈴木", memo: "研究室" },
+  ];
+}
+try {
+  return JSON.parse(saved)
+} catch {
+  return []
+}
+    });
+  
   // [
   //   { id: "1", name: "山田", memo: "陸上部" },
   //   { id: "2", name: "佐藤" },
