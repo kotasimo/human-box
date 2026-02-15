@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./app.css";
 
 type Person = {
@@ -8,16 +8,53 @@ type Person = {
   memo?: string;
 };
 
+const STORAGE_KEY = "humanbox-people-v1";
+
 const Home = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draftName, setDraftName] = useState("");
   const [draftMemo, setDraftMemo] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [people, setPeople] = useState<Person[]>([
-    { id: "1", name: "山田", memo: "陸上部" },
-    { id: "2", name: "佐藤" },
-    { id: "3", name: "鈴木", memo: "研究室" },
-  ]);
+  const [people, setPeople] = useState<Person[]>(() => {
+    if (typeof window === "undefined") {
+      return [
+        { id: "1", name: "山田", memo: "陸上部" },
+        { id: "2", name: "佐藤" },
+        { id: "3", name: "鈴木", memo: "研究室" },
+      ];
+    }
+
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) {
+      return [
+        { id: "1", name: "山田", memo: "陸上部" },
+        { id: "2", name: "佐藤" },
+        { id: "3", name: "鈴木", memo: "研究室" },
+      ];
+    }
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return [];
+    }
+  });
+
+  // [
+  //   { id: "1", name: "山田", memo: "陸上部" },
+  //   { id: "2", name: "佐藤" },
+  //   { id: "3", name: "鈴木", memo: "研究室" },
+  // ]);
+
+  // useEffect(() => {
+  //   const saved = localStorage.getItem(STORAGE_KEY);
+  //   if (!saved) return;
+
+  //   setPeople(JSON.parse(saved));
+  // }, []);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(people));
+  }, [people]);
 
   const addPerson = () => {
     const newPerson: Person = {
@@ -74,56 +111,9 @@ const Home = () => {
               setSelectedId((prev) => (prev === person.id ? null : person.id))
             }
           >
-            <div className="personMain">
-              {editingId === person.id ? (
-                <>
-                  <input
-                    className="nameInput"
-                    value={draftName}
-                    onChange={(e) => setDraftName(e.target.value)}
-                  />
-                  <textarea
-                    className="memoInput"
-                    value={draftMemo}
-                    onChange={(e) => setDraftMemo(e.target.value)}
-                    autoFocus
-                    rows={3}
-                  />
-                </>
-              ) : (
-                <>
-                  <div className="personName">{person.name}</div>
-                  <div className="personMemo">
-                    {person.memo ?? " クリックしてメモを書く "}
-                  </div>
-                </>
-              )}
-            </div>
-
-            <div className="personActions">
-              {editingId === person.id ? (
-                <div className="editActions">
-                  <button className="btn" onClick={saveMemo}>
-                    保存
-                  </button>
-
-                  <button className="btn" onClick={() => setEditingId(null)}>
-                    キャンセル
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <button onClick={() => startEdit(person)} className="btn">
-                    メモを編集
-                  </button>
-                  <button
-                    onClick={() => removePerson(person.id)}
-                    className="btn danger"
-                  >
-                    削除
-                  </button>
-                </>
-              )}
+            <div className="personName">{person.name}</div>
+            <div className="personMemo">
+              {person.memo ?? " クリックしてメモを書く "}
             </div>
           </li>
         ))}
@@ -134,9 +124,61 @@ const Home = () => {
               {people
                 .filter((p) => p.id === selectedId)
                 .map((p) => (
-                  <div key={p.id}>
-                    <h2>{p.name}</h2>
-                    <p>{p.memo}</p>
+                  <div key={p.id} className="modalInner">
+                    <div className="personMain">
+                      {editingId === p.id ? (
+                        <>
+                          <input
+                            className="nameInput"
+                            value={draftName}
+                            onChange={(e) => setDraftName(e.target.value)}
+                          />
+                          <textarea
+                            className="memoInput"
+                            value={draftMemo}
+                            onChange={(e) => setDraftMemo(e.target.value)}
+                            autoFocus
+                            rows={3}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <div className="personName">{p.name}</div>
+                          <div className="personMemo">
+                            {p.memo ?? " クリックしてメモを書く "}
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    <div className="personActions">
+                      {editingId === p.id ? (
+                        <div className="editActions">
+                          <button className="btn" onClick={saveMemo}>
+                            保存
+                          </button>
+
+                          <button
+                            className="btn"
+                            onClick={() => setEditingId(null)}
+                          >
+                            キャンセル
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <button onClick={() => startEdit(p)} className="btn">
+                            メモを編集
+                          </button>
+                          <button
+                            onClick={() => removePerson(p.id)}
+                            className="btn danger"
+                          >
+                            削除
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 ))}
             </div>
