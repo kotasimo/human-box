@@ -17,6 +17,7 @@ const DEFAULT_PEOPLE: Person[] = [
   { id: "3", name: "鈴木", memo: "研究室" },
 ];
 
+// AIが書いた。理解は後回し。localStorageに不正な値が入ったときの処理らしい
 const isPersonArray = (value: unknown): value is Person[] => {
   return (
     Array.isArray(value) &&
@@ -93,24 +94,12 @@ const Home = () => {
             onClick={() => router.push(`/person/${person.id}`)}
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") router.push(`/person/${person.id}`);
-            }}
           >
             <div className="personName">{person.name}</div>
             <div className="personMemo">
               {person.memo?.trim() ? person.memo : " クリックしてメモを書く "}
             </div>
 
-            {/* <button
-              className="btn danger"
-              onClick={(e) => {
-                e.stopPropagation();
-                removePerson(person.id);
-              }}
-            >
-              削除
-            </button> */}
           </li>
         ))}
       </ul>

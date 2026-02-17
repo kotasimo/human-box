@@ -58,7 +58,7 @@ main {
   display: -webkit-box;
   -webkit-line-clamp: 10;
   -webkit-box-orient: vertical;
-  font-size: 13px;
+  font-size: 20px;
   color: #666;
 
   word-break: break-word;
