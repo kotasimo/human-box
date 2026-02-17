@@ -135,12 +135,12 @@ const PersonPage = () => {
         {editingId === person.id ? (
           <>
             <input
-              className="nameInput"
+              className="personNameId"
               value={draftName}
               onChange={(e) => setDraftName(e.target.value)}
             />
             <textarea
-              className="memoInput"
+              className="personMemoId"
               value={draftMemo}
               onChange={(e) => setDraftMemo(e.target.value)}
               autoFocus
@@ -149,8 +149,8 @@ const PersonPage = () => {
           </>
         ) : (
           <>
-            <div className="personName">{person.name}</div>
-            <div className="selectedPersonMemo">
+            <div className="personNameId">{person.name}</div>
+            <div className="personMemoId">
               {person.memo ?? " クリックしてメモを書く "}
             </div>
           </>

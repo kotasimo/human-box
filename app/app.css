@@ -30,15 +30,26 @@ main {
 .personMain {
   width: 100%;
   text-align: left;
-  /* display: grid;
-  width: 90%;
-  gap: 4px; */
+  /* display: flex;
+  width: 90%; */
 }
 
 .personName {
   overflow: hidden;
   font-size: 18px;
   font-weight: 700;
+}
+
+.personNameId {
+  border: 2px solid #0e0b0b;
+  padding: 2px;
+  margin-bottom: 5px;
+  overflow: hidden;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 10px;
+  display: flex;
+  width: 100%;
 }
 
 .personMemo {
@@ -53,16 +64,17 @@ main {
   overflow-wrap: anywhere;
 }
 
-.selectedPersonMemo {
+.personMemoId {
+  border: 2px solid #0e0b0b;
+  padding: 2px;
+  margin-bottom: 5px;
   overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 10;
-  -webkit-box-orient: vertical;
-  font-size: 20px;
-  color: #666;
-
-  word-break: break-word;
-  overflow-wrap: anywhere;
+  font-size: 18px;
+  font-weight: 700;
+  min-height: 200px;
+  border-radius: 10px;
+  display: flex;
+  width: 100%;
 }
 
 .personActions {
