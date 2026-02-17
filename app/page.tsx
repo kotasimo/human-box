@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import "./app.css";
+import { useRouter } from "next/navigation";
 
 type Person = {
   id: string;
@@ -16,20 +17,33 @@ const DEFAULT_PEOPLE: Person[] = [
   { id: "3", name: "鈴木", memo: "研究室" },
 ];
 
-const Home = () => {
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [draftName, setDraftName] = useState("");
-  const [draftMemo, setDraftMemo] = useState("");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [people, setPeople] = useState<Person[] | null>(null);
+const isPersonArray = (value: unknown): value is Person[] => {
+  return (
+    Array.isArray(value) &&
+    value.every((item) => {
+      if (!item || typeof item !== "object") return false;
+      const candidate = item as Record<string, unknown>;
+      const hasValidId = typeof candidate.id === "string";
+      const hasValidName = typeof candidate.name === "string";
+      const hasValidMemo =
+        candidate.memo === undefined || typeof candidate.memo === "string";
+      return hasValidId && hasValidName && hasValidMemo;
+    })
+  );
+};
 
+const Home = () => {
+  const router = useRouter();
+
+  const [people, setPeople] = useState<Person[] | null>(null);
   const hasLoadedRef = useRef(false);
 
   useEffect(() => {
     try {
       const saved = window.localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        setPeople(JSON.parse(saved));
+        const parsed = JSON.parse(saved) as unknown;
+        setPeople(isPersonArray(parsed) ? parsed : DEFAULT_PEOPLE);
       } else {
         setPeople(DEFAULT_PEOPLE);
       }
@@ -42,6 +56,7 @@ const Home = () => {
 
   useEffect(() => {
     if (!hasLoadedRef.current) return;
+    if (people === null) return;
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(people));
   }, [people]);
 
@@ -53,44 +68,13 @@ const Home = () => {
     const newPerson: Person = {
       id: crypto.randomUUID(),
       name: "新しい人",
-      memo: "仮メモ",
+      memo: "",
     };
     setPeople((prev) => [newPerson, ...prev]);
   };
 
   const removePerson = (id: string) => {
     setPeople((prev) => prev.filter((person) => person.id != id));
-    setSelectedId(null);
-    if (editingId === id) {
-      setEditingId(null);
-      setDraftName("");
-      setDraftMemo("");
-    }
-  };
-
-  const startEdit = (person: Person) => {
-    setEditingId(person.id);
-    setDraftName(person.name);
-    setDraftMemo(person.memo ?? "");
-  };
-
-  const saveMemo = () => {
-    if (editingId === null) return;
-
-    setPeople((prev) =>
-      prev.map((p) =>
-        p.id === editingId ? { ...p, name: draftName, memo: draftMemo } : p,
-      ),
-    );
-
-    setEditingId(null);
-    setDraftName("");
-    setDraftMemo("");
-  };
-
-  const cancelEdit = () => {
-    setEditingId(null);
-    setDraftMemo("");
   };
 
   return (
@@ -105,84 +89,30 @@ const Home = () => {
         {people.map((person) => (
           <li
             key={person.id}
-            className={`personCard ${selectedId === person.id ? "active" : ""}`}
-            onClick={() =>
-              setSelectedId((prev) => (prev === person.id ? null : person.id))
-            }
+            className="personCard"
+            onClick={() => router.push(`/person/${person.id}`)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") router.push(`/person/${person.id}`);
+            }}
           >
             <div className="personName">{person.name}</div>
             <div className="personMemo">
-              {person.memo ?? " クリックしてメモを書く "}
+              {person.memo?.trim() ? person.memo : " クリックしてメモを書く "}
             </div>
+
+            {/* <button
+              className="btn danger"
+              onClick={(e) => {
+                e.stopPropagation();
+                removePerson(person.id);
+              }}
+            >
+              削除
+            </button> */}
           </li>
         ))}
-
-        {selectedId && (
-          <div className="overlay" onClick={() => setSelectedId(null)}>
-            <div className="modalCard" onClick={(e) => e.stopPropagation()}>
-              {people
-                .filter((p) => p.id === selectedId)
-                .map((p) => (
-                  <div key={p.id} className="modalInner">
-                    <div className="personMain">
-                      {editingId === p.id ? (
-                        <>
-                          <input
-                            className="nameInput"
-                            value={draftName}
-                            onChange={(e) => setDraftName(e.target.value)}
-                          />
-                          <textarea
-                            className="memoInput"
-                            value={draftMemo}
-                            onChange={(e) => setDraftMemo(e.target.value)}
-                            autoFocus
-                            rows={3}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <div className="personName">{p.name}</div>
-                          <div className="selectedPersonMemo">
-                            {p.memo ?? " クリックしてメモを書く "}
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    <div className="personActions">
-                      {editingId === p.id ? (
-                        <div className="editActions">
-                          <button className="btn" onClick={saveMemo}>
-                            保存
-                          </button>
-
-                          <button
-                            className="btn"
-                            onClick={() => setEditingId(null)}
-                          >
-                            キャンセル
-                          </button>
-                        </div>
-                      ) : (
-                        <>
-                          <button onClick={() => startEdit(p)} className="btn">
-                            メモを編集
-                          </button>
-                          <button
-                            onClick={() => removePerson(p.id)}
-                            className="btn danger"
-                          >
-                            削除
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-        )}
       </ul>
     </main>
   );
