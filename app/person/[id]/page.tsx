@@ -92,7 +92,9 @@ const PersonPage = () => {
   }
 
   const removePerson = (id: string) => {
-    setPeople((prev) => (prev? prev.filter((person) => person.id != id) : prev));
+    setPeople((prev) =>
+      prev ? prev.filter((person) => person.id != id) : prev,
+    );
     // setSelectedId(null);
     if (editingId === id) {
       setEditingId(null);
@@ -111,9 +113,11 @@ const PersonPage = () => {
     if (editingId === null) return;
 
     setPeople((prev) =>
-      prev ? prev.map((p) =>
-        p.id === editingId ? { ...p, name: draftName, memo: draftMemo } : p,
-      ) : prev,
+      prev
+        ? prev.map((p) =>
+            p.id === editingId ? { ...p, name: draftName, memo: draftMemo } : p,
+          )
+        : prev,
     );
 
     setEditingId(null);
@@ -146,6 +150,15 @@ const PersonPage = () => {
               autoFocus
               rows={3}
             />
+            <div className="editActions">
+              <button className="btn" onClick={saveMemo}>
+                保存
+              </button>
+
+              <button className="btn" onClick={cancelEdit}>
+                キャンセル
+              </button>
+            </div>
           </>
         ) : (
           <>
@@ -153,35 +166,20 @@ const PersonPage = () => {
             <div className="personMemoId">
               {person.memo ?? " クリックしてメモを書く "}
             </div>
-          </>
-        )}
-      </div>
-
-      <div className="personActions">
-        {editingId === person.id ? (
-          <div className="editActions">
-            <button className="btn" onClick={saveMemo}>
-              保存
-            </button>
-
-            <button className="btn" onClick={cancelEdit}>
-              キャンセル
-            </button>
-          </div>
-        ) : (
-          <>
-            <button onClick={() => router.push("/")} className="btn">
-              戻る
-            </button>
-            <button onClick={() => startEdit(person)} className="btn">
-              メモを編集
-            </button>
-            <button
-              onClick={() => removePerson(person.id)}
-              className="btn danger"
-            >
-              削除
-            </button>
+            <div className="personAction">
+              <button onClick={() => router.push("/")} className="btn">
+                戻る
+              </button>
+              <button onClick={() => startEdit(person)} className="btn">
+                メモを編集
+              </button>
+              <button
+                onClick={() => removePerson(person.id)}
+                className="btn danger"
+              >
+                削除
+              </button>
+            </div>
           </>
         )}
       </div>

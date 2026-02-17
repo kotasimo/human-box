@@ -77,16 +77,18 @@ main {
   width: 100%;
 }
 
-.personActions {
-  position: absolute;
-  right: 24px;   /* カード右端からの距離 */
-  bottom: 24px;  /* カード下端からの距離 */
+.personAction {
+  /* position: absolute;
+  right: 24px;   カード右端からの距離
+  bottom: 24px;  カード下端からの距離 */
   display: flex;
+  justify-content: flex-end;
   gap: 8px;
 }
 
 .editActions {
   display: flex;
+  justify-content: flex-end;
   gap: 8px;
 }
 
