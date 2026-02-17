@@ -34,12 +34,6 @@ main {
   width: 90%; */
 }
 
-.personName {
-  overflow: hidden;
-  font-size: 18px;
-  font-weight: 700;
-}
-
 .personNameId {
   border: 2px solid #0e0b0b;
   padding: 2px;
@@ -52,35 +46,45 @@ main {
   width: 100%;
 }
 
-.personMemo {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  font-size: 13px;
-  color: #666;
-
-  word-break: break-word;
-  overflow-wrap: anywhere;
-}
-
 .personMemoId {
   border: 2px solid #0e0b0b;
   padding: 2px;
   margin-bottom: 5px;
   overflow: hidden;
+  font-size: 16px;
+  font-weight: 500;
+  min-height: 180px;
+  border-radius: 10px;
+  display: flex;
+  width: 100%;
+}
+
+.personNameEdit {
+  border: 3px solid #0e0b0b;
+  padding: 2px;
+  margin-bottom: 5px;
+  overflow: hidden;
   font-size: 18px;
   font-weight: 700;
-  min-height: 200px;
+  border-radius: 10px;
+  display: flex;
+  width: 100%;
+}
+
+.personMemoEdit {
+  border: 3px solid #0e0b0b;
+  padding: 2px;
+  margin-bottom: 5px;
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 500;
+  min-height: 180px;
   border-radius: 10px;
   display: flex;
   width: 100%;
 }
 
 .personAction {
-  /* position: absolute;
-  right: 24px;   カード右端からの距離
-  bottom: 24px;  カード下端からの距離 */
   display: flex;
   justify-content: flex-end;
   gap: 8px;
