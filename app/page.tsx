@@ -60,6 +60,12 @@ const Home = () => {
 
   const removePerson = (id: string) => {
     setPeople((prev) => prev.filter((person) => person.id != id));
+    setSelectedId(null);
+    if (editingId === id) {
+      setEditingId(null);
+      setDraftName("");
+      setDraftMemo("");
+    }
   };
 
   const startEdit = (person: Person) => {
@@ -137,7 +143,7 @@ const Home = () => {
                       ) : (
                         <>
                           <div className="personName">{p.name}</div>
-                          <div className="personMemo">
+                          <div className="selectedPersonMemo">
                             {p.memo ?? " クリックしてメモを書く "}
                           </div>
                         </>

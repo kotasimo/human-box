@@ -44,10 +44,25 @@ main {
 .personMemo {
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   font-size: 13px;
   color: #666;
+
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.selectedPersonMemo {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 10;
+  -webkit-box-orient: vertical;
+  font-size: 13px;
+  color: #666;
+
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .personActions {
