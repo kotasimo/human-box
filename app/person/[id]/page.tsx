@@ -41,7 +41,6 @@ const PersonPage = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draftName, setDraftName] = useState("");
   const [draftMemo, setDraftMemo] = useState("");
-  // const [selectedId, setSelectedId] = useState<string | null>(null);
   const [people, setPeople] = useState<Person[] | null>(null);
 
   const hasLoadedRef = useRef(false);
@@ -83,10 +82,6 @@ const PersonPage = () => {
     return (
       <main>
         <h1>Not Found</h1>
-        {/* <p>ID: {id}</p> */}
-        {/* <button onClick={() => router.push("/")} className="return">
-          戻る
-        </button> */}
       </main>
     );
   }
@@ -95,12 +90,12 @@ const PersonPage = () => {
     setPeople((prev) =>
       prev ? prev.filter((person) => person.id != id) : prev,
     );
-    // setSelectedId(null);
     if (editingId === id) {
       setEditingId(null);
       setDraftName("");
       setDraftMemo("");
     }
+    router.push("/");
   };
 
   const startEdit = (person: Person) => {

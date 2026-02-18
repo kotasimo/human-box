@@ -68,7 +68,7 @@ const Home = () => {
   const addPerson = () => {
     const newPerson: Person = {
       id: crypto.randomUUID(),
-      name: "新しい人",
+      name: "",
       memo: "",
     };
     setPeople((prev) => [newPerson, ...prev]);

@@ -44,7 +44,12 @@ main {
   border-radius: 10px;
   display: flex;
   width: 100%;
+  min-height: 35px;
 }
+
+/* .personMemo {
+
+} */
 
 .personMemoId {
   border: 2px solid #0e0b0b;
