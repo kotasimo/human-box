@@ -157,4 +157,32 @@ h1 {
   box-sizing: border-box;
 }
 
+.profileBox{
+  border: 2px solid #0e0b0b;
+  border-radius: 10px;
+  padding: 12px;
+  max-width: 900px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.profileRow{
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.profileLabel{
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.profileValue{
+  overflow-wrap: anywhere;
+}
+
+.profileEmpty{
+  opacity: 0.6;
+}
 

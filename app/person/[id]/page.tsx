@@ -4,16 +4,27 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import "../../app.css";
 
+type ProfileItem = { label: string; value: string };
+
 type Person = {
   id: string;
   name: string;
+  profile?: ProfileItem[];
   memo?: string;
 };
 
 const STORAGE_KEY = "humanbox-people-v1";
 
 const DEFAULT_PEOPLE: Person[] = [
-  { id: "1", name: "山田", memo: "陸上部" },
+  {
+    id: "1",
+    name: "山田",
+    profile: [
+      { label: "部活", value: "陸上部" },
+      { label: "関係", value: "友達" },
+    ],
+    memo: "陸上部",
+  },
   { id: "2", name: "佐藤" },
   { id: "3", name: "鈴木", memo: "研究室" },
 ];
@@ -28,6 +39,22 @@ const isPersonArray = (value: unknown): value is Person[] => {
       const hasValidName = typeof candidate.name === "string";
       const hasValidMemo =
         candidate.memo === undefined || typeof candidate.memo === "string";
+      const profile = candidate.profile;
+
+      let hasValidProfile = true;
+
+      if (profile !== undefined) {
+        if (!Array.isArray(profile)) return false;
+
+        hasValidProfile = profile.every((p) => {
+          if (!p || typeof p !== "object") return false;
+          const entry = p as Record<string, unknown>;
+          return (
+            typeof entry.label === "string" && typeof entry.value === "string"
+          );
+        });
+      }
+
       return hasValidId && hasValidName && hasValidMemo;
     })
   );
@@ -85,6 +112,8 @@ const PersonPage = () => {
       </main>
     );
   }
+
+  const profile = person.profile ?? [];
 
   const removePerson = (id: string) => {
     setPeople((prev) =>
@@ -158,6 +187,20 @@ const PersonPage = () => {
         ) : (
           <>
             <div className="personNameId">{person.name}</div>
+
+            <div className="profileBox">
+              {profile.length === 0 ? (
+                <div className="profileEmpty">プロフィール未設定</div>
+              ) : (
+                profile.map((item, i) => (
+                  <div key={i} className="profileRow">
+                    <div className="profileLabel">・{item.label}</div>
+                    <div className="profileValue">{item.value}</div>
+                  </div>
+                ))
+              )}
+            </div>
+
             <div className="personMemoId">
               {person.memo ?? " クリックしてメモを書く "}
             </div>
